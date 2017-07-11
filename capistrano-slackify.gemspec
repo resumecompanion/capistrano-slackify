@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'capistrano-slackify'
-  spec.version       = '2.9.0'
+  spec.version       = '2.10.0'
   spec.authors       = ['seenmyfate']
   spec.email         = ['seenmyfate@gmail.com']
   spec.summary       = %q{Publish deployment notifications to Slack via the incoming webhooks integration}
@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'capistrano', '>= 3.2.0'
   spec.add_runtime_dependency 'multi_json'
+  spec.add_runtime_dependency 'capistrano-conditional' 
 
   spec.add_development_dependency 'bundler', '~> 1'
   spec.add_development_dependency 'rake'

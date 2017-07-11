@@ -1,0 +1,25 @@
+namespace :slack do 
+  desc 'Set Notify Slack Start text message with changed commit'
+  task :set_started_text do 
+    on roles(:web) do
+      starting_text = "#{fetch(:application)} deploy by #{fetch(:slack_user)}: \n
+  TAG #{fetch(:branch_tag)}\n"
+
+      currently_deployed = capture("cat #{current_path}/REVISION").strip rescue nil
+      deploy = ConditionalDeploy.new(self, currently_deployed, fetch(:git_deploying))
+       
+      deploy.send(:report_plan)
+      git = deploy.instance_variable_get(:@git)
+      current = deploy.instance_variable_get(:@current)
+      deploying = deploy.instance_variable_get(:@deploying)
+
+      change_commit = git.log.between(current, deploying)
+      change_commit = change_commit.reject { |commit| commit.message.to_s.match("Merge") }
+      starting_text += change_commit.collect { |commit| commit.message.split("\n").first + ' ' + commit.author.name }.join("\n")
+
+      set :slack_deploy_starting_text, starting_text
+    end
+  end
+end
+
+before 'slack:notify_started', 'slack:set_started_text'
