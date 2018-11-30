@@ -15,7 +15,10 @@ namespace :slack do
 
       change_commit = git.log.between(current, deploying)
       change_commit = change_commit.reject { |commit| commit.message.to_s.match("Merge") }
-      starting_text += change_commit.collect { |commit| commit.message.split("\n").first + ' ' + commit.author.name }.join("\n")
+      starting_text += change_commit.collect do |commit| 
+        commit_message = commit.message.split("\n").first
+        commit_message.gsub(/'/, ' ') + ' ' + commit.author.name
+      end.join("\n")
 
       set :slack_deploy_starting_text, starting_text
     end

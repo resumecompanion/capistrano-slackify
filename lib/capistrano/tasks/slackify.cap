@@ -1,3 +1,4 @@
+require 'pry'
 namespace :slack do
   desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
        ':slack_subdomain and :slack_token must be set'
@@ -8,9 +9,9 @@ namespace :slack do
       if fetch(:slack_notify_events).include? :started
         info 'Notifying Slack of deploy starting'
         Array(fetch(:slack_channel)).each {|channel|
-          execute :curl, '-X POST', '-s', '--data-urlencode',
+          execute(:curl, '-X POST', '-s', '--data-urlencode',
             Slackify::Payload.build(self, :starting, channel),
-            fetch(:slack_url)
+            fetch(:slack_url))
         }
       end
     end
