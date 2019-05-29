@@ -1,4 +1,3 @@
-require 'pry'
 namespace :slack do
   desc 'Notify Slack of a deployment via the incoming webhooks integration - ' \
        ':slack_subdomain and :slack_token must be set'
